@@ -91,6 +91,8 @@ app.get("/items", (req, res, next) => {
 });
 app.get("/prices", (req, res, next) => {
   Item.find().then(items => {
+    let time = 5111;
+    let size = items.length;
     console.log(items.length);
     var i = 0;
     function myLoop() {
@@ -118,9 +120,10 @@ app.get("/prices", (req, res, next) => {
                 if (!item) console.log("could not find item");
                 else
                   console.log(
-                    `Price Updated price= ${item.price} --- volume = ${
-                      item.volume
-                    }`
+                    `Price Updated price= ${items[i - 1].price} --- volume = ${
+                      items[i - 1].volume
+                    }`,
+                    " index of  : " + i
                   );
               })
               .catch(e => {
@@ -129,16 +132,16 @@ app.get("/prices", (req, res, next) => {
           }
         );
         i++;
-        if (i < items.length) {
+        if (i <= items.length) {
           myLoop();
         } else {
           next();
         }
-      }, 10000);
+      }, time);
     }
 
     myLoop();
-    res.send("Done");
+    res.send({ time, items: size });
   });
 
   // console.log(items);

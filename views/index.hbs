@@ -8,7 +8,8 @@
         <br>
 
         <br>
-        <a id="update" class="btn btn-primary btn-lg active white">Update Prices!</a>
+        <a id="price" class="btn btn-primary btn-lg active white">Update Prices!</a>
+        <h3 class="display-15 white" id="time-exe"></h3>
     </header>
 
     <!-- Page Features -->
@@ -41,14 +42,26 @@
 
     <script>
         let run = 0;
-        $("#update").click(() => {
+        $("#price").click(() => {
 
-            if (!$("#update").hasClass('disabled')) {
+            if (!$("#price").hasClass('disabled')) {
 
-                $("#update").addClass("disabled")
+                $("#price").addClass("disabled")
                 console.log("Loading")
+                let start = new Date;
 
-                setTimeout(() => { $("#update").removeClass("disabled") }, 3000)
+                $.ajax({
+                    type: "GET",
+                    url: '/prices',
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data.time * data.items / (1000));
+
+                        startTimer(data.time * data.items / 1000, document.querySelector('#time-exe'));
+                    }
+                });
+
+
             } else {
                 console.log("Cant update now")
                 return false
@@ -71,4 +84,34 @@
             $('#logs').html("Script is running");
             health();*/
         })
+
+        function startTimer(duration, display) {
+            var start = Date.now(),
+                diff,
+                minutes,
+                seconds;
+            function timer() {
+                // get the number of seconds that have elapsed since 
+                // startTimer() was called
+                diff = duration - (((Date.now() - start) / 1000) | 0);
+
+                // does the same job as parseInt truncates the float
+                minutes = (diff / 60) | 0;
+                seconds = (diff % 60) | 0;
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = "Updating Prices in : " + minutes + ":" + seconds;
+
+                if (diff <= 0) {
+                    // add one second so that the count down starts at the full duration
+                    // example 05:00 not 04:59
+                    start = Date.now() + 1000;
+                }
+            };
+            // we don't want to wait a full second before the timer starts
+            timer();
+            setInterval(timer, 1000);
+        }
     </script>
