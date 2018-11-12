@@ -17,9 +17,40 @@ app.engine(
   hbs({
     extname: "hbs",
     defaultLayout: "layout",
-    layoutDir: __dirname + "/views/"
+    layoutDir: __dirname + "/views/",
+    helpers: {
+      calc: function(p1, p2) {
+        if (!p1 || !p2) {
+          return;
+        }
+        p1 = p1.replace(",", ".");
+        p2 = p2.replace(",", ".");
+
+        p1 = p1.slice(0, -1);
+        p2 = p2.slice(0, -1);
+
+        p1 = parseFloat(p1);
+        p2 = parseFloat(p2);
+        // console.log(p1, p2);
+        let per = ((p1 - p2) / p1) * 100;
+        per = per.toFixed(1);
+
+        // console.log(per);
+        return per;
+      },
+      classprice: (p1, p2) => {
+        if (!p1 || !p2) {
+          return;
+        }
+        p1 = p1.replace(",", ".").slice(0, -1);
+        p2 = p2.replace(",", ".").slice(0, -1);
+        // console.log(p1 - p2);
+        return p1 - p2 >= 0 ? "greencalc" : "redcalc";
+      }
+    }
   })
 );
+
 app.get("/", (req, res) => {
   res.render("index.hbs", {
     pageTitle: "Home page",
@@ -102,32 +133,33 @@ app.get("/prices", (req, res, next) => {
             items[i].market_hash_name
           }`,
           (e, r, body) => {
-            console.log(
-              JSON.parse(body).lowest_price,
-              items[i].market_hash_name,
-              JSON.parse(body).volume
-            );
-            Item.findOneAndUpdate(
-              { itemid: items[i - 1].itemid },
-              {
-                $set: {
-                  price: JSON.parse(body).lowest_price,
-                  volume: JSON.parse(body).volume
-                }
-              }
-            )
+            console
+              .log
+              // items[i - 1].prices[0].price,
+              // items[i - 1].market_hash_name,
+              // items[i - 1].prices[0].volume
+              ();
+            Item.findOne({ itemid: items[i - 1].itemid })
               .then(item => {
                 if (!item) console.log("could not find item");
-                else
-                  console.log(
-                    `Price Updated price= ${items[i - 1].price} --- volume = ${
-                      items[i - 1].volume
-                    }`,
-                    " index of  : " + i
-                  );
+                else {
+                  let price = {
+                    price: JSON.parse(body).lowest_price,
+                    volume: JSON.parse(body).volume
+                  };
+                  item.prices.unshift(price);
+                  item.save().then(item => {
+                    console.log(
+                      `Price Updated price= ${
+                        item.prices[0].price
+                      } --- volume = ${item.prices[0].volume}`,
+                      " index of  : " + i
+                    );
+                  });
+                }
               })
               .catch(e => {
-                res.status(400).send();
+                res.status(400).json(e);
               });
           }
         );

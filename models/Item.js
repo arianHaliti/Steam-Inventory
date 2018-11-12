@@ -24,14 +24,22 @@ const ItemSchema = new Schema({
     type: String,
     required: true
   },
-  price: {
-    type: String,
-    deafult: "0.00"
-  },
-  volume: {
-    type: String,
-    deafult: "0"
-  },
+  prices: [
+    {
+      price: {
+        type: String,
+        deafult: "0.00"
+      },
+      volume: {
+        type: String,
+        deafult: "0"
+      },
+      date: {
+        type: Date,
+        default: Date.now()
+      }
+    }
+  ],
   count: {
     type: Number
   }
