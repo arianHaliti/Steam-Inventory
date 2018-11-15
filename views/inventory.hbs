@@ -12,20 +12,19 @@
         {{#each items}}
         <div class="col-lg-3 col-md-6 mb-4 ">
             <div class="card" jumbo-color>
-                <img class="card-img-top jumbo-color" src="https://steamcommunity-a.akamaihd.net/economy/image/{{icon}}"
+                <img class="card-img-top jumbo-color" src="https://steamcommunity-a.akamaihd.net/economy/image/{{itemid.icon}}"
                     alt="">
-                <div class="card-body jumbo-color"> <span class="red">X{{count}}</span>
-                    <h4 class="card-title  white">{{name}}</h4>
+                <div class="card-body jumbo-color"> <span class="red">X{{itemid.count}}</span>
+                    <h4 class="card-title  white">{{itemid.name}}</h4>
                     <p class="card-text white">Starting at: <span class="red">{{prices.0.price}}</span></p>
-                    <p class="card-text white">Before at: <span class="before">{{prices.2.price}}</span></p>
-                    <p class="card-text white"></p> <span class={{classprice prices.0.price prices.2.price}}>{{calc
-                        prices.0.price prices.2.price}} %
+                    <p class="card-text white">Before at: <span class="before">{{prices.1.price}}</span></p>
+                    <p class="card-text white"></p> <span class="red">
                     </span></p>
                     <p class="card-text white">Volume: <span class="red">{{prices.0.volume}}</span> sold in the last 24
                         hours</p>
                 </div>
                 <div class="card-footer jumbo-color">
-                    <a href="https://steamcommunity.com/market/listings/730/{{market_hash_name}}" class="btn btn-primary ">Find
+                    <a href="https://steamcommunity.com/market/listings/730/{{itemid.market_hash_name}}" class="btn btn-primary ">Find
                         Out More!</a>
                 </div>
             </div>

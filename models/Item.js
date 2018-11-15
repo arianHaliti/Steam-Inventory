@@ -2,11 +2,9 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const ItemSchema = new Schema({
-  itemid: {
+  _id: {
     type: String,
-    required: true,
-    index: true,
-    unique: true
+    required: true
   },
   icon: {
     type: String,
@@ -20,26 +18,18 @@ const ItemSchema = new Schema({
     type: String,
     required: true
   },
+  type: {
+    type: String
+  },
+  marketable: {
+    type: String,
+    required: true
+  },
   description: {
     type: String,
     required: true
   },
-  prices: [
-    {
-      price: {
-        type: String,
-        deafult: "0.00"
-      },
-      volume: {
-        type: String,
-        deafult: "0"
-      },
-      date: {
-        type: Date,
-        default: Date.now()
-      }
-    }
-  ],
+
   count: {
     type: Number
   }
