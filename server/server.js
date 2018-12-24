@@ -82,12 +82,13 @@ app.get("/", (req, res) => {
 });
 app.get("/inventory", (req, res) => {
   let items = [];
-  Price.find({})
-    .populate("itemid", ["icon", "name", "market_hash_name", "count"])
+  Item.find({})
+    .populate({ path: "prices", select: "prices" })
     .then(i => {
       // console.log(i);
 
       // console.log(p);
+      // res.json(i);
       res.render("inventory.hbs", {
         pageTitle: "Home page",
 
@@ -103,6 +104,7 @@ app.get("/items", (req, res, next) => {
   // request(
   //   "https://steamcommunity.com/inventory/76561198069559601/730/2?l=english&count=5000",
   //   (e, r, body) => {
+
   let body = require("../example.json");
   let assets = body.assets;
   let i = 0;
@@ -215,7 +217,7 @@ app.get("/items", (req, res, next) => {
 
 app.get("/prices", (req, res, next) => {
   Item.find().then(items => {
-    let time = 5000;
+    let time = 3000;
     let size = items.length;
     console.log(items.length);
     var i = 0;

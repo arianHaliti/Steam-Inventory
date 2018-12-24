@@ -41,6 +41,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     <script>
+        $("#update").click(() => {
+            $.ajax({
+                type: "GET",
+                url: '/items',
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                }
+            });
+        })
         let run = 0;
         $("#price").click(() => {
 

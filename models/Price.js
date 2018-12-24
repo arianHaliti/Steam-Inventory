@@ -3,8 +3,7 @@ const Schema = mongoose.Schema;
 
 const PriceSchema = new Schema({
   itemid: {
-    type: String,
-    ref: "items"
+    type: String
   },
   name: {
     type: String

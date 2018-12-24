@@ -9,17 +9,20 @@
 
     <!-- Page Features -->
     <div class="row text-center ">
+        {{!-- <h1 style="color:wheat">{{items}}</h1> --}}
         {{#each items}}
+
+        {{!-- <h1 style="color:wheat">{{prices.0.prices.0.price}}</h1> --}}
         <div class="col-lg-3 col-md-6 mb-4 ">
             <div class="card" jumbo-color>
-                <img class="card-img-top jumbo-color" src="https://steamcommunity-a.akamaihd.net/economy/image/{{itemid.icon}}"
+                <img class="card-img-top jumbo-color" src="https://steamcommunity-a.akamaihd.net/economy/image/{{icon}}"
                     alt="">
-                <div class="card-body jumbo-color"> <span class="red">X{{itemid.count}}</span>
-                    <h4 class="card-title  white">{{itemid.name}}</h4>
-                    <p class="card-text white">Starting at: <span class="red">{{prices.0.price}}</span></p>
-                    <p class="card-text white">Before at: <span class="before">{{prices.1.price}}</span></p>
-                    <p class="card-text white"></p> <span class={{classprice  prices.0.price prices.1.price}}>{{calc
-                        prices.0.price prices.1.price}} %
+                <div class="card-body jumbo-color"> <span class="red">X{{count}}</span>
+                    <h4 class="card-title  white">{{name}}</h4>
+                    <p class="card-text white">Starting at: <span class="greencalc">{{prices.0.prices.0.price}}</span></p>
+                    <p class="card-text white">Before at: <span class="before">{{prices.0.prices.1.price}}</span></p>
+                    <p class="card-text white"></p> <span class={{classprice  prices.0.prices.0.price prices.0.prices.1.price}}>{{calc
+                        prices.0.prices.0.price prices.0.prices.1.price}} %
                     </span></p>
                     <p class="card-text white"></p> <span class="red">
                     </span></p>
