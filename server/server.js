@@ -223,59 +223,63 @@ app.get("/prices", (req, res, next) => {
     var i = 0;
     myLoop();
     function myLoop() {
-      setTimeout(function() {
-        request(
-          `https://steamcommunity.com/market/priceoverview/?currency=3&appid=730&market_hash_name=${
-            items[i].market_hash_name
-          }`,
-          (e, r, body) => {
-            Price.findOne({ itemid: items[i - 1]._id })
-              .then(item => {
-                if (!item) {
-                  console.log(items[i - 1].market_hash_name);
-                  let price = new Price({
-                    itemid: items[i - 1]._id,
-                    name: items[i - 1].market_hash_name,
-                    prices: {
+      try {
+        setTimeout(function() {
+          request(
+            `https://steamcommunity.com/market/priceoverview/?currency=3&appid=730&market_hash_name=${
+              items[i].market_hash_name
+            }`,
+            (e, r, body) => {
+              Price.findOne({ itemid: items[i - 1]._id })
+                .then(item => {
+                  if (!item) {
+                    console.log(items[i - 1].market_hash_name);
+                    let price = new Price({
+                      itemid: items[i - 1]._id,
+                      name: items[i - 1].market_hash_name,
+                      prices: {
+                        price: JSON.parse(body).lowest_price,
+                        volume: JSON.parse(body).volume
+                      }
+                    });
+                    price
+                      .save()
+                      .then(price => {
+                        console.log(`Price saved for id: ${price.itemid}`);
+                      })
+                      .catch(e => console.log(e));
+                  } else {
+                    let price = {
                       price: JSON.parse(body).lowest_price,
                       volume: JSON.parse(body).volume
-                    }
-                  });
-                  price
-                    .save()
-                    .then(price => {
-                      console.log(`Price saved for id: ${price.itemid}`);
-                    })
-                    .catch(e => console.log(e));
-                } else {
-                  let price = {
-                    price: JSON.parse(body).lowest_price,
-                    volume: JSON.parse(body).volume
-                  };
-                  item.prices.unshift(price);
-                  item.save().then(item => {
-                    console.log(items[i - 1].market_hash_name);
-                    console.log(
-                      `Price Updated price= ${
-                        item.prices[0].price
-                      } --- volume = ${item.prices[0].volume}`,
-                      " index of  : " + i
-                    );
-                  });
-                }
-              })
-              .catch(e => {
-                console.log(e);
-              });
+                    };
+                    item.prices.unshift(price);
+                    item.save().then(item => {
+                      console.log(items[i - 1].market_hash_name);
+                      console.log(
+                        `Price Updated price= ${
+                          item.prices[0].price
+                        } --- volume = ${item.prices[0].volume}`,
+                        " index of  : " + i
+                      );
+                    });
+                  }
+                })
+                .catch(e => {
+                  console.log(e);
+                });
+            }
+          );
+          if (i < items.length) {
+            myLoop();
+            i++;
+          } else {
+            return;
           }
-        );
-        if (i < items.length) {
-          myLoop();
-          i++;
-        } else {
-          return;
-        }
-      }, time);
+        }, time);
+      } catch (e) {
+        console.log("Something went wrong");
+      }
     }
 
     res.send({ time, items: size });
